@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "66276080627",
+    "project_id": "beermate2",
+    "storage_bucket": "beermate2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66276080627:android:e10a3d1330f9ec9e5ab086",
+        "android_client_info": {
+          "package_name": "com.beermate2.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSNxKjDPNuTkLuRFBCFjUKhwA75GS5mwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
