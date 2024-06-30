@@ -65,6 +65,7 @@ class RegisterPage extends StatelessWidget {
               obscureText: true,
               inputFormatters: [],
             ),
+            const SizedBox(height: 16),
             Container(
               width: 280,
               height: 50,
@@ -72,6 +73,7 @@ class RegisterPage extends StatelessWidget {
                 color: const Color.fromARGB(255, 209, 208, 208),
                 borderRadius: BorderRadius.circular(10),
               ),
+              
               child: ElevatedButton(
                 onPressed: () {},
                 style: ButtonStyle(

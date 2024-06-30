@@ -19,5 +19,18 @@ class FirestoreService {
     return postsStream;
   }
 
+  //UPDATE
+  Future<void> updatePost(String docID, String newPost){
+    return posts.doc(docID).update({
+      'post': newPost,
+      'timestamp': Timestamp.now(),
+    });
+  }
+
   //DELETE
+  Future<void> deletePost(String docID) {
+    return posts.doc(docID).delete();
+  }
+
+
 }

@@ -46,13 +46,14 @@ class LoginPage extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           inputFormatters: [],
           obscureText: false),
+      const SizedBox(height: 16),
       const CustomTextField(
           hintText: 'Jelszó',
           prefixIcon: Icons.password,
           keyboardType: TextInputType.text,
           inputFormatters: [],
           obscureText: true),
-      const SizedBox(height: 215),
+      const SizedBox(height: 200),
       const SizedBox(height: 16),
       Container(
           width: 280,

@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
 
   final TextEditingController textController = TextEditingController();
 
-  void openPostBox() {
+  void openPostBox({String? docID}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -24,7 +24,11 @@ class _HomePageState extends State<HomePage> {
         actions: [
           ElevatedButton(
               onPressed: () {
-                firestoreService.addPost(textController.text);
+                if (docID == null) {
+                  firestoreService.addPost(textController.text);
+                } else {
+                  firestoreService.updatePost(docID, textController.text);
+                }
                 textController.clear();
                 Navigator.pop(context);
               },
@@ -37,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("BeerMate")),
+      appBar: AppBar(title: const Text("BeerMate")),
       floatingActionButton: FloatingActionButton(
         onPressed: openPostBox,
         child: const Icon(Icons.add),
@@ -58,6 +62,19 @@ class _HomePageState extends State<HomePage> {
 
                 return ListTile(
                   title: Text(postText),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () => openPostBox(docID: docID),
+                        icon: const Icon(Icons.settings),
+                      ),
+                      IconButton(
+                        onPressed: () => firestoreService.deletePost(docID),
+                        icon: const Icon(Icons.delete),
+                      ),
+                    ],
+                  ),
                 );
               },
             );
@@ -69,4 +86,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
