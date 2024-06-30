@@ -1,3 +1,4 @@
+import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
 import 'package:beermate_2/screens/login_screen.dart';
 import 'package:beermate_2/screens/regist_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,89 +16,58 @@ class StarterPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 16),
-            Container(
+            CustomButton(
+              text: 'Bejelentkezés',
+              backgroundColor: const Color.fromARGB(255, 209, 208, 208),
               width: 280,
               height: 50,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 209, 208, 208),
-                borderRadius: BorderRadius.circular(10),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()));
-                },
-                style: ButtonStyle(
-                  textStyle: WidgetStateProperty.all<TextStyle>(
-                    const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  backgroundColor:
-                      WidgetStateProperty.all<Color>(Colors.transparent),
-                  elevation: WidgetStateProperty.all<double>(0),
-                ),
-                child: const Text('Bejelentkezés'),
-              ),
+              borderRadius: BorderRadius.circular(10),
             ),
             const SizedBox(height: 16),
-            Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Container(
-                width: 280,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 209, 208, 208),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ElevatedButton(
-                  onPressed: () async {},
-                  style: ButtonStyle(
-                    textStyle: WidgetStateProperty.all<TextStyle>(
-                      const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(Colors.transparent),
-                    elevation: WidgetStateProperty.all<double>(0),
-                  ),
-                  child: const Text('Bejelentkezés Google fiókkal'),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Container(
+            CustomButton(
+              text: 'Bejelentkezés Google fiókkal',
+              backgroundColor: const Color.fromARGB(255, 209, 208, 208),
               width: 280,
               height: 50,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 209, 208, 208),
-                borderRadius: BorderRadius.circular(10),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const RegisterPage()));
-                },
-                style: ButtonStyle(
-                  textStyle: WidgetStateProperty.all<TextStyle>(
-                    const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  backgroundColor:
-                      WidgetStateProperty.all<Color>(Colors.transparent),
-                  elevation: WidgetStateProperty.all<double>(0),
-                ),
-                child: const Text('Regisztráció'),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            const SizedBox(height: 16),
+            CustomButton(
+              text: 'Regisztárció',
+              backgroundColor: const Color.fromARGB(255, 209, 208, 208),
+              width: 280,
+              height: 50,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RegisterPage()),
+                );
+              },
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
+              borderRadius: BorderRadius.circular(10),
             ),
           ],
         ),

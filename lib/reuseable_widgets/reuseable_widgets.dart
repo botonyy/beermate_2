@@ -8,7 +8,7 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter> inputFormatters;
   final bool obscureText;
 
-const CustomTextField({
+  const CustomTextField({
     super.key,
     required this.hintText,
     required this.prefixIcon,
@@ -17,7 +17,7 @@ const CustomTextField({
     required this.obscureText,
   });
 
-@override
+  @override
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
@@ -25,7 +25,6 @@ const CustomTextField({
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
           borderSide: BorderSide.none,
-          
         ),
         filled: true,
         fillColor: Colors.grey.withOpacity(0.1),
@@ -34,6 +33,53 @@ const CustomTextField({
       keyboardType: keyboardType,
       obscureText: obscureText,
       inputFormatters: inputFormatters,
+    );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  final String text;
+  final Color backgroundColor;
+  final double width;
+  final double height;
+  final VoidCallback onPressed;
+  final TextStyle textStyle;
+  final BorderRadiusGeometry borderRadius;
+
+  const CustomButton({
+    super.key,
+    required this.text,
+    required this.backgroundColor,
+    required this.width,
+    required this.height,
+    required this.onPressed,
+    required this.textStyle,
+    required this.borderRadius,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: borderRadius,
+      ),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          textStyle: WidgetStateProperty.all(textStyle),
+          backgroundColor: WidgetStateProperty.all(Colors.transparent),
+          elevation: WidgetStateProperty.all(0),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: borderRadius,
+            ),
+          ),
+        ),
+        child: Text(text),
+      ),
     );
   }
 }

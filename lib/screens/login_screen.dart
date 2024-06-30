@@ -54,29 +54,23 @@ class LoginPage extends StatelessWidget {
           inputFormatters: [],
           obscureText: true),
       const SizedBox(height: 200),
-      const SizedBox(height: 16),
-      Container(
-          width: 280,
-          height: 50,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 209, 208, 208),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
-            },
-            style: ElevatedButton.styleFrom(
-              shape: const StadiumBorder(),
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: const Color.fromARGB(255, 209, 208, 208),
-            ),
-            child: const Text(
-              "Bejelentkezés",
-              style: TextStyle(fontSize: 16),
-            ),
-          )),
+      CustomButton(
+        text: 'Bejelentkezés',
+        backgroundColor: const Color.fromARGB(255, 209, 208, 208),
+        width: 280,
+        height: 50,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        },
+        textStyle: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
     ]);
   }
 
