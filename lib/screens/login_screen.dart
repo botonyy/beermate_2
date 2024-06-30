@@ -1,4 +1,5 @@
 import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
+import 'package:beermate_2/screens/home_screen.dart';
 import 'package:beermate_2/screens/regist_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +63,8 @@ class LoginPage extends StatelessWidget {
           ),
           child: ElevatedButton(
             onPressed: () {
-              // gomb logika
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomePage()));
             },
             style: ElevatedButton.styleFrom(
               shape: const StadiumBorder(),
@@ -84,8 +86,10 @@ class LoginPage extends StatelessWidget {
         const Text("Még nincs fiókod?"),
         TextButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const RegisterPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegisterPage()));
             },
             child: const Text(
               "Regisztráció",
