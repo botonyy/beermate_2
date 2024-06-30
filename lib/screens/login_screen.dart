@@ -56,20 +56,12 @@ class LoginPage extends StatelessWidget {
       const SizedBox(height: 200),
       CustomButton(
         text: 'Bejelentkezés',
-        backgroundColor: const Color.fromARGB(255, 209, 208, 208),
-        width: 280,
-        height: 50,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const HomePage()),
           );
         },
-        textStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-        borderRadius: BorderRadius.circular(10),
       ),
     ]);
   }

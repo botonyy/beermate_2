@@ -1,4 +1,5 @@
 import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
+import 'package:beermate_2/screens/starter_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -66,30 +67,14 @@ class RegisterPage extends StatelessWidget {
               inputFormatters: [],
             ),
             const SizedBox(height: 16),
-            Container(
-              width: 280,
-              height: 50,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 209, 208, 208),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ButtonStyle(
-                  textStyle: WidgetStateProperty.all<TextStyle>(
-                    const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  backgroundColor: WidgetStateProperty.all<Color>(
-                    Colors.transparent,
-                  ),
-                  elevation: WidgetStateProperty.all<double>(0),
-                ),
-                child: const Text('Regisztráció'),
-              ),
+            CustomButton(
+              text: 'Regisztráció',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const StarterPage()),
+                );
+              },
             ),
           ],
         ),

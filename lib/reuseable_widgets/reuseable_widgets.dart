@@ -13,8 +13,8 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     required this.prefixIcon,
     required this.keyboardType,
-    required this.inputFormatters,
     required this.obscureText,
+    required this.inputFormatters,
   });
 
   @override
@@ -49,12 +49,15 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     required this.text,
-    required this.backgroundColor,
-    required this.width,
-    required this.height,
     required this.onPressed,
-    required this.textStyle,
-    required this.borderRadius,
+    this.backgroundColor = const Color.fromARGB(255, 209, 208, 208),
+    this.width = 280,
+    this.height = 50,
+    this.textStyle = const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   });
 
   @override
