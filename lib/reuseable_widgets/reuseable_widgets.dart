@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
@@ -85,4 +86,43 @@ class CustomButton extends StatelessWidget {
       ),
     );
   }
+}
+
+//CustomAppBar
+
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      //leading: const Icon(Icons.account_circle_rounded), // Bal oldali ikon
+      title: const Text(
+        'BeerMate',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      centerTitle: true,
+      /*
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search), // Jobb oldali ikon
+          onPressed: () {
+            // Ide jöhet az akció, ha szükséges
+          },
+        ),
+      ],
+      */
+      backgroundColor: const Color.fromARGB(255, 219, 215, 215), // Szürke hátteret állít be
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30.0), // Alsó bal sarok lekerekítése
+          bottomRight: Radius.circular(30.0),
+        ),
+      ),
+    );
+  }
+  
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

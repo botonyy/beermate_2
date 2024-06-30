@@ -10,9 +10,7 @@ class StarterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BeerMate'),
-      ),
+      appBar: const CustomAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -39,7 +37,6 @@ class StarterPage extends StatelessWidget {
             const SizedBox(height: 16),
             CustomButton(
               text: 'Regisztárció',
-
               onPressed: () {
                 Navigator.push(
                   context,

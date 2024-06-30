@@ -1,3 +1,4 @@
+import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
 import 'package:beermate_2/services/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -14,34 +15,10 @@ class _HomePageState extends State<HomePage> {
 
   final TextEditingController textController = TextEditingController();
 
-  void openPostBox({String? docID}) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: TextField(
-          controller: textController,
-        ),
-        actions: [
-          ElevatedButton(
-              onPressed: () {
-                if (docID == null) {
-                  firestoreService.addPost(textController.text);
-                } else {
-                  firestoreService.updatePost(docID, textController.text);
-                }
-                textController.clear();
-                Navigator.pop(context);
-              },
-              child: const Text("Add"))
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("BeerMate")),
+      appBar: const CustomAppBar(),
       floatingActionButton: FloatingActionButton(
         onPressed: openPostBox,
         child: const Icon(Icons.add),
@@ -82,6 +59,30 @@ class _HomePageState extends State<HomePage> {
             return const Center(child: CircularProgressIndicator());
           }
         },
+      ),
+    );
+  }
+
+  void openPostBox({String? docID}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: TextField(
+          controller: textController,
+        ),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                if (docID == null) {
+                  firestoreService.addPost(textController.text);
+                } else {
+                  firestoreService.updatePost(docID, textController.text);
+                }
+                textController.clear();
+                Navigator.pop(context);
+              },
+              child: const Text("Add"))
+        ],
       ),
     );
   }

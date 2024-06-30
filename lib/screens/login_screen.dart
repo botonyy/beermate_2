@@ -11,6 +11,7 @@ class LoginPage extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: const CustomAppBar(),
         body: Container(
           margin: const EdgeInsets.all(24),
           child: Column(
