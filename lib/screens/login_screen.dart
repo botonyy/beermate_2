@@ -84,7 +84,7 @@ Future<void> signInWithEmailAndPassword(
     if (context.mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     }
   } on FirebaseAuthException catch (e) {
@@ -130,7 +130,7 @@ void _showErrorDialog(BuildContext context, String message) {
         TextButton(
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => const RegisterPage()));
+                context, MaterialPageRoute(builder: (context) => RegisterPage()));
           },
           child: const Text(
             "Regisztráció",
