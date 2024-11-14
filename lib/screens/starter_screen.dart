@@ -28,10 +28,8 @@ class StarterPage extends StatelessWidget {
             CustomButton(
               text: 'Bejelentkezés Google fiókkal',
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
+                final loginPage = LoginPage();
+                loginPage.signInWithGoogle(context);
               },
             ),
             const SizedBox(height: 16),
