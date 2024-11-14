@@ -131,35 +131,76 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.grey,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 36, 35, 35), // Sötétebb háttérszín
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat),
-          label: 'Chat',
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: const Offset(0, -1),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle, size: 40), // Középső ikon nagyobb méretben
-          label: 'Add Post',
+        child: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: onTap,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor:  Color.fromARGB(255, 219, 215, 215), // Átlátszó háttér a `Container`-hez
+          selectedItemColor: Color.fromARGB(255, 95, 86, 143),
+          unselectedItemColor: Color.fromARGB(255, 65, 61, 61),
+          showSelectedLabels: false, // Címkék elrejtése
+          showUnselectedLabels: false, // Címkék elrejtése
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_circle, size: 40), // Nagyobb méretű + ikon középen
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.star),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: '',
+            ),
+          ],
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.star),
-          label: 'Rate',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
+      ),
+    );
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Profil"),
+      ),
+      body: const Center(
+        child: Text("Ez a ProfileScreen tartalma"),
+      ),
     );
   }
 }

@@ -15,13 +15,13 @@ class _HomePageState extends State<HomePage> {
   final FirestoreService firestoreService = FirestoreService();
   final TextEditingController textController = TextEditingController();
 
-  // Define the list of screens corresponding to the bottom navigation items
+  // Képernyők listája, beleértve a ProfileScreen-t
   final List<Widget> _screens = [
-    HomePageContent(), // Home content
-    Placeholder(),     // Replace with ChatPage() or other relevant widget
-    Placeholder(),     // Placeholder for Add Post (handled by the FloatingActionButton)
-    Placeholder(),     // Replace with RatePage() or other relevant widget
-    Placeholder(),     // Replace with ProfilePage() or other relevant widget
+    HomePageContent(),
+    Placeholder(),     // Chat képernyő
+    Placeholder(),     // Poszt hozzáadása (később kezelve a FloatingActionButton-nal)
+    Placeholder(),     // Értékelés képernyő
+    ProfileScreen(),   // Profil képernyő
   ];
 
   void _onItemTapped(int index) {
@@ -39,11 +39,17 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          openPostBox(); // Action for adding a post
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 50.0), // Feljebb emeljük a gombot
+        child: Align(
+          alignment: Alignment(1.0, 0.9), // Jobb oldalra igazítva, a navigációs sáv fölé
+          child: FloatingActionButton(
+            onPressed: () {
+              openPostBox(); // Akció poszt hozzáadásához
+            },
+            child: const Icon(Icons.add),
+          ),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
