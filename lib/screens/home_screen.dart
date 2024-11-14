@@ -12,13 +12,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FirestoreService firestoreService = FirestoreService();
-
   final TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBar(showBackButton: false),
       floatingActionButton: FloatingActionButton(
         onPressed: openPostBox,
         child: const Icon(Icons.add),
@@ -33,8 +32,7 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 DocumentSnapshot document = postsList[index];
                 String docID = document.id;
-                Map<String, dynamic> data =
-                    document.data() as Map<String, dynamic>;
+                Map<String, dynamic> data = document.data() as Map<String, dynamic>;
                 String postText = data["post"];
 
                 return ListTile(
