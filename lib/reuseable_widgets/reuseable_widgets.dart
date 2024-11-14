@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
@@ -8,7 +7,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final List<TextInputFormatter> inputFormatters;
   final bool obscureText;
-  final TextEditingController? controller; // Add controller here
+  final TextEditingController? controller;
 
   const CustomTextField({
     super.key,
@@ -17,13 +16,13 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.obscureText,
     required this.inputFormatters,
-    this.controller, // Add controller as a named optional parameter
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: controller, // Use controller here
+      controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
         border: OutlineInputBorder(
@@ -91,8 +90,6 @@ class CustomButton extends StatelessWidget {
   }
 }
 
-//CustomAppBar
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
 
@@ -121,3 +118,48 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
+
+class CustomBottomNavigationBar extends StatelessWidget {
+  final int currentIndex;
+  final Function(int) onTap;
+
+  const CustomBottomNavigationBar({
+    Key? key,
+    required this.currentIndex,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: onTap,
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: Colors.white,
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.grey,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat),
+          label: 'Chat',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add_circle, size: 40), // Középső ikon nagyobb méretben
+          label: 'Add Post',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.star),
+          label: 'Rate',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ],
+    );
+  }
+}

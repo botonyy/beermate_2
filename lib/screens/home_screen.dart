@@ -11,23 +11,86 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
   final FirestoreService firestoreService = FirestoreService();
   final TextEditingController textController = TextEditingController();
+
+  // Define the list of screens corresponding to the bottom navigation items
+  final List<Widget> _screens = [
+    HomePageContent(), // Home content
+    Placeholder(),     // Replace with ChatPage() or other relevant widget
+    Placeholder(),     // Placeholder for Add Post (handled by the FloatingActionButton)
+    Placeholder(),     // Replace with RatePage() or other relevant widget
+    Placeholder(),     // Replace with ProfilePage() or other relevant widget
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(showBackButton: false),
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: openPostBox,
+        onPressed: () {
+          openPostBox(); // Action for adding a post
+        },
         child: const Icon(Icons.add),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: firestoreService.getPostsStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<DocumentSnapshot> postsList = snapshot.data!.docs;
-            return ListView.builder(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  void openPostBox({String? docID}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: TextField(
+          controller: textController,
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              if (docID == null) {
+                firestoreService.addPost(textController.text);
+              } else {
+                firestoreService.updatePost(docID, textController.text);
+              }
+              textController.clear();
+              Navigator.pop(context);
+            },
+            child: const Text("Add"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomePageContent extends StatelessWidget {
+  final FirestoreService firestoreService = FirestoreService();
+
+  HomePageContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: firestoreService.getPostsStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<DocumentSnapshot> postsList = snapshot.data!.docs;
+          return SingleChildScrollView(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: postsList.length,
               itemBuilder: (context, index) {
                 DocumentSnapshot document = postsList[index];
@@ -41,7 +104,25 @@ class _HomePageState extends State<HomePage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        onPressed: () => openPostBox(docID: docID),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: TextField(
+                                controller: TextEditingController(text: postText),
+                              ),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    firestoreService.updatePost(docID, postText);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Update"),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.settings),
                       ),
                       IconButton(
@@ -52,36 +133,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-    );
-  }
-
-  void openPostBox({String? docID}) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: TextField(
-          controller: textController,
-        ),
-        actions: [
-          ElevatedButton(
-              onPressed: () {
-                if (docID == null) {
-                  firestoreService.addPost(textController.text);
-                } else {
-                  firestoreService.updatePost(docID, textController.text);
-                }
-                textController.clear();
-                Navigator.pop(context);
-              },
-              child: const Text("Add"))
-        ],
-      ),
+            ),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
