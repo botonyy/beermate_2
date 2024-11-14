@@ -1,17 +1,27 @@
 # beermate_2
 
-A new Flutter project.
 
-## Getting Started
+A főbb funkciók részletes megvalósítása
 
-This project is a starting point for a Flutter application.
+    Bejelentkezés és regisztráció:
+        E-mailes és Google alapú bejelentkezési lehetőségek létrehozása.
+        A Firebase Authentication használata a felhasználói adatkezeléshez.
+    Posztolás és interakciók:
+        Gyors posztolási lehetőség ital típusának és esetleges képek hozzáadásával.
+        Reakciók lehetősége posztokra (Egészségedre gomb és kommentek).
+    Ismerősök hozzáadása és törlése:
+        Ismerősök felhasználónév alapján történő keresése és hozzáadása.
+        Ismerősök eltávolítása, amennyiben szükséges.
+    Profil testreszabása és statisztikák:
+        Profilkép feltöltése és módosítása.
+        Italfogyasztási szokások megjelenítése (statisztikák az elfogyasztott italokról).
+    Italok értékelése és véleményezése:
+        Konkrét italok értékelése és szöveges véleményezés lehetősége.
+        Átlagos értékelések megjelenítése az adott ital oldalán.
+    Chat funkció:
+        Egyszerű üzenetküldési lehetőség az ismerősök között.
+    Sikeresen hazaértem funkció:
+        Értesítés küldése az ismerősöknek, akik a nap folyamán meg voltak jelölve egy posztban.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 # beermate_2

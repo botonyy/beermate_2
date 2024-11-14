@@ -3,22 +3,17 @@ import 'package:beermate_2/screens/starter_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeFirebase();
+  await initializeFirebase(); // csak egyszer kell fusson
   runApp(const MyApp());
 }
 
 Future<void> initializeFirebase() async {
-  try {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  } catch (e) {
-    if (e.toString().contains('duplicate-app')) {
-      print('Firebase app already exists, skipping initialization.');
-    } else {
-      rethrow;
-    }
-  }
+  await Firebase.initializeApp(
+  name: 'beermate2',
+  options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class MyApp extends StatelessWidget {

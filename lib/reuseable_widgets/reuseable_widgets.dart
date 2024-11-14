@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final List<TextInputFormatter> inputFormatters;
   final bool obscureText;
+  final TextEditingController? controller; // Add controller here
 
   const CustomTextField({
     super.key,
@@ -16,11 +17,13 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.obscureText,
     required this.inputFormatters,
+    this.controller, // Add controller as a named optional parameter
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller, // Use controller here
       decoration: InputDecoration(
         hintText: hintText,
         border: OutlineInputBorder(
