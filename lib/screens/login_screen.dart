@@ -43,28 +43,25 @@ class LoginPage extends StatelessWidget {
 
   Widget _inputField(
       TextEditingController emailController, TextEditingController passwordController) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        CustomTextField(
-          hintText: 'Email',
-          prefixIcon: Icons.person,
-          keyboardType: TextInputType.emailAddress,
-          obscureText: false,
-          inputFormatters: [],
-          controller: emailController, // Pass controller here
-        ),
-        const SizedBox(height: 16),
-        CustomTextField(
-          hintText: 'Jelszó',
-          prefixIcon: Icons.password,
-          keyboardType: TextInputType.text,
-          obscureText: true,
-          inputFormatters: [],
-          controller: passwordController, // Pass controller here
-        ),
-      ],
-    );
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      CustomTextField(
+        controller: emailController,
+        hintText: 'Email',
+        prefixIcon: Icons.person,
+        keyboardType: TextInputType.emailAddress,
+        obscureText: false,
+        inputFormatters: [],
+      ),
+      const SizedBox(height: 16),
+      CustomTextField(
+        controller: passwordController,
+        hintText: 'Jelszó',
+        prefixIcon: Icons.password,
+        keyboardType: TextInputType.text,
+        obscureText: true,
+        inputFormatters: [],
+      ),
+    ]);
   }
 
   Widget _loginButton(
@@ -78,28 +75,52 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Future<void> signInWithEmailAndPassword(
-      BuildContext context, String email, String password) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      // Sikeres bejelentkezés
+Future<void> signInWithEmailAndPassword(
+    BuildContext context, String email, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+
+    if (context.mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
-    } on FirebaseAuthException catch (e) {
-      String message;
+    }
+  } on FirebaseAuthException catch (e) {
+    if (context.mounted) {
       if (e.code == 'user-not-found') {
-        message = 'Nincs ilyen felhasználó.';
+        _showErrorDialog(context, 'Nincs ilyen felhasználó.');
       } else if (e.code == 'wrong-password') {
-        message = 'Hibás jelszó.';
+        _showErrorDialog(context, 'Hibás jelszó.');
+      } else if (e.code == 'invalid-credential') {
+        _showErrorDialog(context, 'Hibás felhasználónév vagy jelszó.');
       } else {
-        message = 'Ismeretlen hiba történt.';
+        _showErrorDialog(context, 'Bejelentkezési hiba történt. Próbáld újra.');
       }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
     }
   }
+}
+
+void _showErrorDialog(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Hiba'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   Widget _signup(BuildContext context) {
     return Row(
