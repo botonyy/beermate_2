@@ -6,7 +6,6 @@ A főbb funkciók részletes megvalósítása
     Bejelentkezés és regisztráció:
         E-mailes és Google alapú bejelentkezési lehetőségek létrehozása.
         A Firebase Authentication használata a felhasználói adatkezeléshez.
-### Regisztracional ha nincs kitoltve mezo rossz a hibauzenet.
     Profil testreszabása és statisztikák:
         Profil Adatok Megjelenítése: A felhasználó adatai (felhasználónév, email, telefonszám) alapértelmezetten megjelennek a képernyőn.
         Adatok Módosítása:
@@ -32,4 +31,7 @@ A főbb funkciók részletes megvalósítása
         Értesítés küldése az ismerősöknek, akik a nap folyamán meg voltak jelölve egy posztban.
 
 
-# beermate_2
+# Tovabbi issue-k
+Regisztracional ha nincs kitoltve mezo rossz a hibauzenet.
+Profilkep hozzaadasa
+Profil modositasa

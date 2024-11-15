@@ -1,4 +1,5 @@
 import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
+import 'package:beermate_2/screens/profile_screen.dart';
 import 'package:beermate_2/services/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,12 @@ class _HomePageState extends State<HomePage> {
   final FirestoreService firestoreService = FirestoreService();
   final TextEditingController textController = TextEditingController();
 
-  // Képernyők listája, beleértve a ProfileScreen-t
-  final List<Widget> _screens = [
+final List<Widget> _screens = [
     HomePageContent(),
-    Placeholder(),     // Chat képernyő
-    Placeholder(),     // Poszt hozzáadása (később kezelve a FloatingActionButton-nal)
-    Placeholder(),     // Értékelés képernyő
-    ProfileScreen(),   // Profil képernyő
+    Placeholder(), // Chat screen helye
+    Placeholder(), // Add post (FloatingActionButton kezeli)
+    Placeholder(), // Rate screen helye
+    ProfileScreen(), // Profile screen
   ];
 
   void _onItemTapped(int index) {
@@ -40,12 +40,12 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 50.0), // Feljebb emeljük a gombot
+        padding: const EdgeInsets.only(bottom: 50.0),
         child: Align(
-          alignment: Alignment(1.0, 0.9), // Jobb oldalra igazítva, a navigációs sáv fölé
+          alignment: const Alignment(1.0, 0.9),
           child: FloatingActionButton(
             onPressed: () {
-              openPostBox(); // Akció poszt hozzáadásához
+              openPostBox(); // Add post művelet
             },
             child: const Icon(Icons.add),
           ),
