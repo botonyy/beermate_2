@@ -51,7 +51,7 @@ class LoginPage extends StatelessWidget {
         prefixIcon: Icons.person,
         keyboardType: TextInputType.emailAddress,
         obscureText: false,
-        inputFormatters: [],
+        inputFormatters: const [],
       ),
       const SizedBox(height: 16),
       CustomTextField(
@@ -60,7 +60,7 @@ class LoginPage extends StatelessWidget {
         prefixIcon: Icons.password,
         keyboardType: TextInputType.text,
         obscureText: true,
-        inputFormatters: [],
+        inputFormatters: const [],
       ),
     ]);
   }
@@ -85,7 +85,7 @@ Future<void> signInWithEmailAndPassword(
     if (context.mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
   } on FirebaseAuthException catch (e) {
@@ -157,7 +157,7 @@ void _showErrorDialog(BuildContext context, String message) {
         TextButton(
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => RegisterPage()));
+                context, MaterialPageRoute(builder: (context) => const RegisterPage()));
           },
           child: const Text(
             "Regisztráció",

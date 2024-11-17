@@ -32,6 +32,6 @@ A főbb funkciók részletes megvalósítása
 
 
 # Tovabbi issue-k
-Regisztracional ha nincs kitoltve mezo rossz a hibauzenet.
-Profilkep hozzaadasa
-Profil modositasa
+    Regisztracional ha nincs kitoltve mezo rossz a hibauzenet.
+    Profilkep hozzaadasa
+    Profil modositasa

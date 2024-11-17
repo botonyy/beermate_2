@@ -14,10 +14,13 @@ class FirestoreService {
 
   //READ
   Stream<QuerySnapshot> getPostsStream() {
-    final postsStream =
-        posts.orderBy('timestamp', descending: true).snapshots();
-    return postsStream;
+    return FirebaseFirestore.instance
+        .collection('posts')
+        // .orderBy('createdAt', descending: true) // Eltávolítva a teszteléshez
+        .snapshots();
   }
+
+
 
   //UPDATE
   Future<void> updatePost(String docID, String newPost){

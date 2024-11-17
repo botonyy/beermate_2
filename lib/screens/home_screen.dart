@@ -16,18 +16,52 @@ class _HomePageState extends State<HomePage> {
   final FirestoreService firestoreService = FirestoreService();
   final TextEditingController textController = TextEditingController();
 
-final List<Widget> _screens = [
-    HomePageContent(),
-    Placeholder(), // Chat screen helye
-    Placeholder(), // Add post (FloatingActionButton kezeli)
-    Placeholder(), // Rate screen helye
-    ProfileScreen(), // Profile screen
-  ];
+  final List<Widget> _screens = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Az oldalak inicializálása
+    _screens.addAll([
+      HomePageContent(textController: textController),
+      const Placeholder(),
+      const Placeholder(),
+      const Placeholder(),
+      const ProfileScreen(),
+    ]);
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void openPostBox({String? docID}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: TextField(
+          controller: textController,
+          decoration: const InputDecoration(hintText: 'Add meg a poszt szövegét'),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              if (docID == null) {
+                firestoreService.addPost(textController.text);
+              } else {
+                firestoreService.updatePost(docID, textController.text);
+              }
+              textController.clear();
+              Navigator.pop(context);
+            },
+            child: const Text("Mentés"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -45,7 +79,7 @@ final List<Widget> _screens = [
           alignment: const Alignment(1.0, 0.9),
           child: FloatingActionButton(
             onPressed: () {
-              openPostBox(); // Add post művelet
+              openPostBox(); // Poszt hozzáadása
             },
             child: const Icon(Icons.add),
           ),
@@ -54,96 +88,75 @@ final List<Widget> _screens = [
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
-
-  void openPostBox({String? docID}) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: TextField(
-          controller: textController,
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              if (docID == null) {
-                firestoreService.addPost(textController.text);
-              } else {
-                firestoreService.updatePost(docID, textController.text);
-              }
-              textController.clear();
-              Navigator.pop(context);
-            },
-            child: const Text("Add"),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class HomePageContent extends StatelessWidget {
   final FirestoreService firestoreService = FirestoreService();
+  final TextEditingController textController;
 
-  HomePageContent({super.key});
+  HomePageContent({super.key, required this.textController});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: firestoreService.getPostsStream(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<DocumentSnapshot> postsList = snapshot.data!.docs;
-          return SingleChildScrollView(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: postsList.length,
-              itemBuilder: (context, index) {
-                DocumentSnapshot document = postsList[index];
-                String docID = document.id;
-                Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                String postText = data["post"];
-
-                return ListTile(
-                  title: Text(postText),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: TextField(
-                                controller: TextEditingController(text: postText),
-                              ),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    firestoreService.updatePost(docID, postText);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Update"),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.settings),
-                      ),
-                      IconButton(
-                        onPressed: () => firestoreService.deletePost(docID),
-                        icon: const Icon(Icons.delete),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          );
-        } else {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text("Hiba történt!"));
+        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text("Nincsenek adatok."));
         }
+
+        final postsList = snapshot.data!.docs;
+        return ListView.builder(
+          itemCount: postsList.length,
+          itemBuilder: (context, index) {
+            final document = postsList[index];
+            final data = document.data() as Map<String, dynamic>;
+            final postText = data["post"] ?? "N/A";
+
+            return ListTile(
+              title: Text(postText),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      textController.text = postText;
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: TextField(
+                            controller: textController,
+                            decoration: const InputDecoration(hintText: 'Módosítsd a posztot'),
+                          ),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                firestoreService.updatePost(document.id, textController.text);
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Mentés"),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      firestoreService.deletePost(document.id);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }

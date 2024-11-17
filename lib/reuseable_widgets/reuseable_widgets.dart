@@ -124,10 +124,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
   final Function(int) onTap;
 
   const CustomBottomNavigationBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -156,9 +156,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
           currentIndex: currentIndex,
           onTap: onTap,
           type: BottomNavigationBarType.fixed,
-          backgroundColor:  Color.fromARGB(255, 219, 215, 215), // Átlátszó háttér a `Container`-hez
-          selectedItemColor: Color.fromARGB(255, 95, 86, 143),
-          unselectedItemColor: Color.fromARGB(255, 65, 61, 61),
+          backgroundColor:  const Color.fromARGB(255, 219, 215, 215), // Átlátszó háttér a `Container`-hez
+          selectedItemColor: const Color.fromARGB(255, 95, 86, 143),
+          unselectedItemColor: const Color.fromARGB(255, 65, 61, 61),
           showSelectedLabels: false, // Címkék elrejtése
           showUnselectedLabels: false, // Címkék elrejtése
           items: const [
