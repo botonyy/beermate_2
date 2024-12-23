@@ -32,10 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
         firestoreService: widget.firestoreService,
         textController: TextEditingController(),
       ),
-      const ChatScreen(), // Chat képernyő
-      const AddNewPostScreen(),
-      const RatingScreen(),
-      const ProfileScreen(),
+      ChatScreen(firestoreService: widget.firestoreService),
+      AddNewPostScreen(firestoreService: widget.firestoreService),
+      RatingScreen(firestoreService: widget.firestoreService),
+      ProfileScreen(),
     ];
   }
 
@@ -49,14 +49,31 @@ class _HomeScreenState extends State<HomeScreen> {
     _pageController.jumpToPage(index);
   }
 
+  String _getAppBarTitle() {
+    switch (_currentIndex) {
+      case 0:
+        return 'BeerMate';
+      case 1:
+        return 'Chat';
+      case 2:
+        return 'Új poszt hozzáadása';
+      case 3:
+        return 'Értékelés';
+      case 4:
+        return 'Profil';
+      default:
+        return 'BeerMate';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+        title: _getAppBarTitle(),
         showBackButton: false,
         showFriendsButton: true,
         onNavigateToFriendMgmt: () {
-          // Jobb felső gomb közvetlenül navigál a FriendManagementScreen-re
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -80,9 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
 
 class HomePageContent extends StatelessWidget {
   final FirestoreService firestoreService;

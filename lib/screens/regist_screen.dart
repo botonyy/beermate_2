@@ -18,7 +18,11 @@ class RegisterPage extends StatelessWidget {
     final firestoreService = FirestoreService(); // FirestoreService példány létrehozása
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBar(
+        title: 'Regisztráció', // Megadjuk a megfelelő címet
+        showBackButton: true, // Mutatjuk a vissza gombot
+        showFriendsButton: false, // Nem kell "Friends" gomb
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

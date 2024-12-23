@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:beermate_2/services/firestore.dart';
 
 class RatingScreen extends StatelessWidget {
-  const RatingScreen({super.key});
+  final FirestoreService firestoreService;
+
+  const RatingScreen({super.key, required this.firestoreService});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ratings'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          'This is the Rating screen.',
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
+    return Center(
+      child: Text('Értékelés'), // Scaffold eltávolítva
     );
   }
 }

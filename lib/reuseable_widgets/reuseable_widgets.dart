@@ -1,5 +1,3 @@
-import 'package:beermate_2/screens/friend_mgmt_screen.dart';
-import 'package:beermate_2/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -95,12 +93,14 @@ class CustomButton extends StatelessWidget {
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final bool showFriendsButton;
+  final String title;
   final VoidCallback? onNavigateToFriendMgmt;
 
   const CustomAppBar({
     Key? key,
     this.showBackButton = true,
     this.showFriendsButton = true,
+    required this.title,
     this.onNavigateToFriendMgmt,
   }) : super(key: key);
 
@@ -108,9 +108,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: showBackButton,
-      title: const Text(
-        'BeerMate',
-        style: TextStyle(fontWeight: FontWeight.bold),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       centerTitle: true,
       backgroundColor: const Color.fromARGB(255, 219, 215, 215),
@@ -124,19 +124,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? [
               IconButton(
                 icon: const Icon(Icons.person_add),
-                onPressed: onNavigateToFriendMgmt, // Speciális navigációs callback
+                onPressed: onNavigateToFriendMgmt,
               ),
             ]
-          : null,
+          : null, // Ha false, nincs actions
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-
-
-
 
 
 class CustomBottomNavigationBar extends StatelessWidget {

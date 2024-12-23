@@ -106,7 +106,11 @@ class _StarterPageState extends State<StarterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBar(
+        title: 'BeerMate', // Megadjuk a megfelelő címet a StarterPage-hez
+        showBackButton: false, // Nincs vissza gomb
+        showFriendsButton: false, // Nincs "Friends" gomb
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

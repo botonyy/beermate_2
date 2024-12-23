@@ -15,7 +15,11 @@ class LoginPage extends StatelessWidget {
     final firestoreService = FirestoreService(); // FirestoreService példány
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBar(
+        title: 'Bejelentkezés', // A cím megadása
+        showBackButton: true, // Nincs vissza gomb ezen az oldalon
+        showFriendsButton: false, // Nincs "Friends" gomb ezen az oldalon
+      ),
       body: Container(
         margin: const EdgeInsets.all(24),
         child: Column(

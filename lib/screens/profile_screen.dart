@@ -27,26 +27,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final userData = await userDoc.get();
 
       if (!userData.exists || userData.data()?['username'] == null) {
-        // Ha nincs username, automatikusan létrehozzuk
         final generatedUsername = user!.email!.split('@').first;
-
-        try {
-          await userDoc.set({
-            'username': generatedUsername,
-            'email': user!.email,
-            'createdAt': FieldValue.serverTimestamp(),
-            'phone': '', // Üres mezőként indul
-          }, SetOptions(merge: true));
-
-          usernameController.text = generatedUsername;
-          print("Felhasználónév létrehozva: $generatedUsername");
-        } catch (e) {
-          print("Hiba a felhasználónév mentésekor: $e");
-        }
+        await userDoc.set({
+          'username': generatedUsername,
+          'email': user!.email,
+          'createdAt': FieldValue.serverTimestamp(),
+          'phone': '',
+        }, SetOptions(merge: true));
+        usernameController.text = generatedUsername;
       } else {
-        usernameController.text = userData['username'] ?? '';
-        phoneController.text = userData['phone'] ?? '';
-        print("Felhasználói adatok betöltve: ${userData.data()}");
+        usernameController.text = userData.data()?['username'] ?? '';
+        phoneController.text = userData.data()?['phone'] ?? '';
       }
     }
   }
@@ -66,17 +57,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'phone': phoneController.text,
         }, SetOptions(merge: true));
 
-        print("Felhasználói adatok frissítve: Felhasználónév: ${usernameController.text}, Telefonszám: ${phoneController.text}");
-
         if (passwordController.text.isNotEmpty) {
           try {
             await user!.updatePassword(passwordController.text);
-            print("Jelszó frissítve.");
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Jelszó frissítve!')),
             );
           } catch (e) {
-            print("Hiba a jelszó frissítésekor: $e");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Hiba: ${e.toString()}')),
+            );
           }
         }
 
@@ -84,7 +74,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SnackBar(content: Text('Profil frissítve!')),
         );
       } catch (e) {
-        print("Hiba a felhasználói adatok frissítésekor: $e");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Hiba: ${e.toString()}')),
         );
@@ -96,36 +85,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final isGoogleUser = user?.providerData.any((info) => info.providerId == 'google.com') ?? false;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profil'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: usernameController,
+            decoration: const InputDecoration(labelText: 'Felhasználónév'),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: phoneController,
+            decoration: const InputDecoration(labelText: 'Telefonszám'),
+            keyboardType: TextInputType.phone,
+          ),
+          const SizedBox(height: 16),
+          if (!isGoogleUser)
             TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(labelText: 'Felhasználónév'),
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: 'Új jelszó'),
+              obscureText: true,
             ),
-            TextField(
-              controller: phoneController,
-              decoration: const InputDecoration(labelText: 'Telefonszám'),
-              keyboardType: TextInputType.phone,
-            ),
-            if (!isGoogleUser)
-              TextField(
-                controller: passwordController,
-                decoration: const InputDecoration(labelText: 'Új jelszó'),
-                obscureText: true,
+          if (isGoogleUser)
+            const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                'Google-fiókkal regisztrált felhasználók jelszavát nem lehet módosítani.',
+                style: TextStyle(color: Colors.grey),
+                textAlign: TextAlign.center,
               ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _updateUserData,
-              child: const Text('Mentés'),
             ),
-          ],
-        ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _updateUserData,
+            child: const Text('Mentés'),
+          ),
+        ],
       ),
     );
   }

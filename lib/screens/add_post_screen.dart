@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:beermate_2/services/firestore.dart';
 
 class AddNewPostScreen extends StatelessWidget {
-  const AddNewPostScreen({super.key});
+  final FirestoreService firestoreService;
+
+  const AddNewPostScreen({super.key, required this.firestoreService});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Post'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text('Add a new post here!'),
-      ),
+    return Center(
+        child: Text('Új poszt hozzáadása'),
     );
   }
 }
