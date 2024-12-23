@@ -1,3 +1,5 @@
+import 'package:beermate_2/screens/friend_mgmt_screen.dart';
+import 'package:beermate_2/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -92,8 +94,15 @@ class CustomButton extends StatelessWidget {
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
+  final bool showFriendsButton;
+  final VoidCallback? onNavigateToFriendMgmt;
 
-  const CustomAppBar({super.key, this.showBackButton = true});
+  const CustomAppBar({
+    Key? key,
+    this.showBackButton = true,
+    this.showFriendsButton = true,
+    this.onNavigateToFriendMgmt,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -111,12 +120,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           bottomRight: Radius.circular(30.0),
         ),
       ),
+      actions: showFriendsButton
+          ? [
+              IconButton(
+                icon: const Icon(Icons.person_add),
+                onPressed: onNavigateToFriendMgmt, // Speciális navigációs callback
+              ),
+            ]
+          : null,
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+
+
+
 
 
 class CustomBottomNavigationBar extends StatelessWidget {
@@ -131,60 +151,38 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 36, 35, 35), // Sötétebb háttérszín
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: onTap,
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: const Color.fromARGB(255, 219, 215, 215),
+      selectedItemColor: const Color.fromARGB(255, 95, 86, 143),
+      unselectedItemColor: const Color.fromARGB(255, 65, 61, 61),
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: '',
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: const Offset(0, -1),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.people),
+          label: '',
         ),
-        child: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: onTap,
-          type: BottomNavigationBarType.fixed,
-          backgroundColor:  const Color.fromARGB(255, 219, 215, 215), // Átlátszó háttér a `Container`-hez
-          selectedItemColor: const Color.fromARGB(255, 95, 86, 143),
-          unselectedItemColor: const Color.fromARGB(255, 65, 61, 61),
-          showSelectedLabels: false, // Címkék elrejtése
-          showUnselectedLabels: false, // Címkék elrejtése
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_circle, size: 40), // Nagyobb méretű + ikon középen
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: '',
-            ),
-          ],
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add_circle, size: 40),
+          label: '',
         ),
-      ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.star),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: '',
+        ),
+      ],
     );
   }
 }
+

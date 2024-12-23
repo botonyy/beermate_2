@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:beermate_2/services/firestore.dart'; // Importáljuk a FirestoreService-t
 
 class StarterPage extends StatefulWidget {
   const StarterPage({super.key});
@@ -15,10 +16,12 @@ class StarterPage extends StatefulWidget {
 }
 
 class _StarterPageState extends State<StarterPage> {
+  final FirestoreService firestoreService = FirestoreService(); // FirestoreService példány
+
   @override
   void initState() {
     super.initState();
-    _initializeUserData(); // Felhasználói adatok inicializálása
+    _initializeUserData();
   }
 
   Future<void> _initializeUserData() async {
@@ -72,7 +75,9 @@ class _StarterPageState extends State<StarterPage> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(firestoreService: firestoreService),
+          ),
         );
       }
     } catch (e) {

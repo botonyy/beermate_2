@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
+import 'package:beermate_2/services/firestore.dart'; // Importáljuk a FirestoreService-t
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -14,6 +15,7 @@ class RegisterPage extends StatelessWidget {
     final phoneController = TextEditingController();
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
+    final firestoreService = FirestoreService(); // FirestoreService példány létrehozása
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -77,6 +79,7 @@ class RegisterPage extends StatelessWidget {
                   phoneController.text,
                   passwordController.text,
                   confirmPasswordController.text,
+                  firestoreService, // Átadjuk a FirestoreService-t
                 );
               },
             ),
@@ -93,6 +96,7 @@ class RegisterPage extends StatelessWidget {
     String phone,
     String password,
     String confirmPassword,
+    FirestoreService firestoreService, // FirestoreService paraméter
   ) async {
     if (password != confirmPassword) {
       _showErrorDialog(context, 'A jelszavak nem egyeznek.');
@@ -114,7 +118,9 @@ class RegisterPage extends StatelessWidget {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(firestoreService: firestoreService), // Átadjuk a HomeScreen-nek
+        ),
       );
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(context, 'Hiba: ${e.message}');

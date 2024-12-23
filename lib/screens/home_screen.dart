@@ -1,100 +1,98 @@
 import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
-import 'package:beermate_2/screens/profile_screen.dart';
-import 'package:beermate_2/services/firestore.dart';
+import 'package:beermate_2/screens/add_post_screen.dart';
+import 'package:beermate_2/screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:beermate_2/screens/friend_mgmt_screen.dart';
+import 'package:beermate_2/screens/profile_screen.dart';
+import 'package:beermate_2/screens/rating_screen.dart';
+import 'package:beermate_2/services/firestore.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  final FirestoreService firestoreService;
+
+  const HomeScreen({super.key, required this.firestoreService});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  final FirestoreService firestoreService = FirestoreService();
-  final TextEditingController textController = TextEditingController();
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+  final PageController _pageController = PageController();
 
-  final List<Widget> _screens = [];
+  late final List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
 
-    // Az oldalak inicializálása
-    _screens.addAll([
-      HomePageContent(textController: textController),
-      const Placeholder(),
-      const Placeholder(),
-      const Placeholder(),
+    _screens = [
+      HomePageContent(
+        firestoreService: widget.firestoreService,
+        textController: TextEditingController(),
+      ),
+      const ChatScreen(), // Chat képernyő
+      const AddNewPostScreen(),
+      const RatingScreen(),
       const ProfileScreen(),
-    ]);
+    ];
   }
 
-  void _onItemTapped(int index) {
+  void _onPageChanged(int index) {
     setState(() {
-      _selectedIndex = index;
+      _currentIndex = index;
     });
   }
 
-  void openPostBox({String? docID}) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: TextField(
-          controller: textController,
-          decoration: const InputDecoration(hintText: 'Add meg a poszt szövegét'),
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              if (docID == null) {
-                firestoreService.addPost(textController.text);
-              } else {
-                firestoreService.updatePost(docID, textController.text);
-              }
-              textController.clear();
-              Navigator.pop(context);
-            },
-            child: const Text("Mentés"),
-          ),
-        ],
-      ),
-    );
+  void _onItemTapped(int index) {
+    _pageController.jumpToPage(index);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(showBackButton: false),
-      body: _screens[_selectedIndex],
+      appBar: CustomAppBar(
+        showBackButton: false,
+        showFriendsButton: true,
+        onNavigateToFriendMgmt: () {
+          // Jobb felső gomb közvetlenül navigál a FriendManagementScreen-re
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FriendManagementScreen(
+                firestoreService: widget.firestoreService,
+              ),
+            ),
+          );
+        },
+      ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        children: _screens,
+        physics: const NeverScrollableScrollPhysics(),
+      ),
       bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
+        currentIndex: _currentIndex,
         onTap: _onItemTapped,
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 50.0),
-        child: Align(
-          alignment: const Alignment(1.0, 0.9),
-          child: FloatingActionButton(
-            onPressed: () {
-              openPostBox(); // Poszt hozzáadása
-            },
-            child: const Icon(Icons.add),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
 
+
+
+
 class HomePageContent extends StatelessWidget {
-  final FirestoreService firestoreService = FirestoreService();
+  final FirestoreService firestoreService;
   final TextEditingController textController;
 
-  HomePageContent({super.key, required this.textController});
+  const HomePageContent({
+    super.key,
+    required this.firestoreService,
+    required this.textController,
+  });
 
   @override
   Widget build(BuildContext context) {
