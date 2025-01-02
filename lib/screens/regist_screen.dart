@@ -94,44 +94,71 @@ class RegisterPage extends StatelessWidget {
   }
 
   Future<void> _registerUser(
-    BuildContext context,
-    String email,
-    String username,
-    String phone,
-    String password,
-    String confirmPassword,
-    FirestoreService firestoreService, // FirestoreService paraméter
-  ) async {
-    if (password != confirmPassword) {
-      _showErrorDialog(context, 'A jelszavak nem egyeznek.');
+  BuildContext context,
+  String email,
+  String username,
+  String phone,
+  String password,
+  String confirmPassword,
+  FirestoreService firestoreService,
+) async {
+  if (password != confirmPassword) {
+    _showErrorDialog(context, 'A jelszavak nem egyeznek.');
+    return;
+  }
+
+  try {
+    print("Regisztráció megkezdése...");
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final uid = userCredential.user!.uid;
+    print("Felhasználó létrejött az Authentication fülön: $uid");
+
+    // Ellenőrizzük, hogy a felhasználónév egyedi-e
+    print("Felhasználónév ellenőrzése a Firestore-ban...");
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      print("A felhasználónév már foglalt.");
+      _showErrorDialog(context, 'A felhasználónév már foglalt.');
       return;
     }
 
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+    // Adatok mentése Firestore-ba
+    print("Adatok mentése Firestore-ba...");
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      'email': email,
+      'username': username,
+      'phone': phone,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+    print("Adatok sikeresen mentve a Firestore-ba: $uid");
 
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-        'email': email,
-        'username': username,
-        'phone': phone,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(firestoreService: firestoreService), // Átadjuk a HomeScreen-nek
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      _showErrorDialog(context, 'Hiba: ${e.message}');
-    } catch (e) {
-      _showErrorDialog(context, 'Ismeretlen hiba történt. Próbáld újra.');
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(firestoreService: firestoreService),
+      ),
+    );
+  } on FirebaseAuthException catch (e) {
+    print("Authentication hiba: ${e.message}");
+    _showErrorDialog(context, 'Hiba: ${e.message}');
+  } on FirebaseException catch (e) {
+    print("Firestore hiba: ${e.message}");
+    _showErrorDialog(context, 'Firestore hiba: ${e.message}');
+  } catch (e) {
+    print("Általános hiba: $e");
+    _showErrorDialog(context, 'Ismeretlen hiba történt: $e');
   }
+}
+
+
 
   void _showErrorDialog(BuildContext context, String message) {
     showDialog(

@@ -5,6 +5,7 @@ import 'dart:io';
 class CameraService {
   late CameraController _cameraController;
 
+
   Future<void> initializeCamera() async {
     final cameras = await availableCameras();
     if (cameras.isEmpty) {
@@ -14,7 +15,7 @@ class CameraService {
 
     _cameraController = CameraController(
       firstCamera,
-      ResolutionPreset.high,
+      ResolutionPreset.medium,
     );
 
     await _cameraController.initialize();
