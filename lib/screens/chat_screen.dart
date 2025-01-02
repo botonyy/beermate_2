@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:beermate_2/services/firestore.dart';
+import 'package:beermate_2/services/firestore_service.dart';
 
 class ChatScreen extends StatelessWidget {
   final FirestoreService firestoreService;

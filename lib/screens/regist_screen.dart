@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
-import 'package:beermate_2/services/firestore.dart'; // Importáljuk a FirestoreService-t
+import 'package:beermate_2/services/firestore_service.dart'; // Importáljuk a FirestoreService-t
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});

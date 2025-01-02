@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beermate_2/screens/friend_mgmt_screen.dart';
 import 'package:beermate_2/screens/profile_screen.dart';
 import 'package:beermate_2/screens/rating_screen.dart';
-import 'package:beermate_2/services/firestore.dart';
+import 'package:beermate_2/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -127,7 +127,7 @@ class HomePageContent extends StatelessWidget {
           itemBuilder: (context, index) {
             final document = postsList[index];
             final data = document.data() as Map<String, dynamic>;
-            final postText = data["post"] ?? "N/A";
+            final postText = data["content"] ?? "N/A"; // Frissítve: 'content' mező használata
 
             return ListTile(
               title: Text(postText),

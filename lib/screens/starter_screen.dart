@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:beermate_2/services/firestore.dart'; // Importáljuk a FirestoreService-t
+import 'package:beermate_2/services/firestore_service.dart'; // Importáljuk a FirestoreService-t
 
 class StarterPage extends StatefulWidget {
   const StarterPage({super.key});

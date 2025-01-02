@@ -1,7 +1,7 @@
 import 'package:beermate_2/reuseable_widgets/reuseable_widgets.dart';
 import 'package:beermate_2/screens/home_screen.dart';
 import 'package:beermate_2/screens/regist_screen.dart';
-import 'package:beermate_2/services/firestore.dart';
+import 'package:beermate_2/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

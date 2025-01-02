@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:beermate_2/services/firestore.dart';
+import 'package:beermate_2/services/firestore_service.dart';
 
 class FriendManagementScreen extends StatelessWidget {
   final FirestoreService firestoreService;
