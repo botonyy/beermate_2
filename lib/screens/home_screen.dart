@@ -78,12 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FriendManagementScreen(
-                firestoreService: widget.firestoreService,
-              ),
+              builder: (context) => const FriendManagementScreen(), // Távolítsd el a firestoreService paramétert
             ),
           );
         },
+
       ),
       body: PageView(
         controller: _pageController,
