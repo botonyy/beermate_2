@@ -30,13 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
     _screens = [
       HomePageContent(
         firestoreService: widget.firestoreService,
-        textController: TextEditingController(),
       ),
       ChatScreen(firestoreService: widget.firestoreService),
       AddNewPostScreen(firestoreService: widget.firestoreService),
       RatingScreen(firestoreService: widget.firestoreService),
       ProfileScreen(),
-    ];
+];
+
   }
 
   void _onPageChanged(int index) {
@@ -100,12 +100,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class HomePageContent extends StatelessWidget {
   final FirestoreService firestoreService;
-  final TextEditingController textController;
 
   const HomePageContent({
     super.key,
     required this.firestoreService,
-    required this.textController,
   });
 
   @override
@@ -118,7 +116,7 @@ class HomePageContent extends StatelessWidget {
         } else if (snapshot.hasError) {
           return const Center(child: Text("Hiba történt!"));
         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text("Nincsenek adatok."));
+          return const Center(child: Text("Nincsenek posztok."));
         }
 
         final postsList = snapshot.data!.docs;
@@ -127,42 +125,57 @@ class HomePageContent extends StatelessWidget {
           itemBuilder: (context, index) {
             final document = postsList[index];
             final data = document.data() as Map<String, dynamic>;
-            final postText = data["content"] ?? "N/A"; // Frissítve: 'content' mező használata
 
-            return ListTile(
-              title: Text(postText),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
+            // Poszt adatok kinyerése
+            final postText = data["content"] ?? "N/A";
+            final imageUrl = data["image_url"];
+            final username = data["username"] ?? "Ismeretlen";
+            final createdAt = (data["created_at"] as Timestamp?)?.toDate() ?? DateTime.now();
+
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      textController.text = postText;
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          content: TextField(
-                            controller: textController,
-                            decoration: const InputDecoration(hintText: 'Módosítsd a posztot'),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                              onPressed: () {
-                                firestoreService.updatePost(document.id, textController.text);
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Mentés"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                  ListTile(
+                    leading: const CircleAvatar(
+                      child: Icon(Icons.person),
+                    ),
+                    title: Text(username, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text(
+                      "${createdAt.toLocal()}",
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      firestoreService.deletePost(document.id);
-                    },
+                  if (imageUrl != null)
+                    Image.network(
+                      imageUrl,
+                      width: double.infinity,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(postText, style: const TextStyle(fontSize: 16)),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          // TODO: Like funkció hozzáadása
+                        },
+                        icon: const Icon(Icons.thumb_up_alt_outlined),
+                        label: const Text("Like"),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {
+                          // TODO: Komment funkció hozzáadása
+                        },
+                        icon: const Icon(Icons.comment_outlined),
+                        label: const Text("Komment"),
+                      ),
+                    ],
                   ),
                 ],
               ),

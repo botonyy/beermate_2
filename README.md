@@ -17,6 +17,7 @@ A főbb funkciók részletes megvalósítása
         Profilkép feltöltése és módosítása.
         Italfogyasztási szokások megjelenítése (statisztikák az elfogyasztott italokról).
     Posztolás és interakciók:
+        poszt letrehozasanal valasztani lehessen, hogy publikus-e a poszt
         Gyors posztolási lehetőség ital típusának és esetleges képek hozzáadásával.
         Reakciók lehetősége posztokra (Egészségedre gomb és kommentek).
     Ismerősök hozzáadása és törlése:
