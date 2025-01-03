@@ -34,7 +34,7 @@ class FirestoreService {
   }
 
   Future<DocumentSnapshot> getUser(String userId) async {
-    return users.doc(userId).get();
+    return FirebaseFirestore.instance.collection('users').doc(userId).get();
   }
 
   Future<void> updateUser(String userId, Map<String, dynamic> data) async {

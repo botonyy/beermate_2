@@ -125,60 +125,83 @@ class HomePageContent extends StatelessWidget {
           itemBuilder: (context, index) {
             final document = postsList[index];
             final data = document.data() as Map<String, dynamic>;
+            final userId = data['user_id'] ?? "unknown";
+            final postText = data['content'] ?? "N/A";
+            final imageUrl = data['image_url'] ?? null;
 
-            // Poszt adatok kinyerése
-            final postText = data["content"] ?? "N/A";
-            final imageUrl = data["image_url"];
-            final username = data["username"] ?? "Ismeretlen";
-            final createdAt = (data["created_at"] as Timestamp?)?.toDate() ?? DateTime.now();
+            return FutureBuilder<DocumentSnapshot>(
+              future: firestoreService.getUser(userId), // Felhasználói adat lekérése
+              builder: (context, userSnapshot) {
+                if (userSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (userSnapshot.hasError || !userSnapshot.hasData || !userSnapshot.data!.exists) {
+                  return const ListTile(
+                    title: Text("Ismeretlen felhasználó"),
+                    subtitle: Text("Hiba történt a felhasználónév betöltésekor."),
+                  );
+                }
 
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    leading: const CircleAvatar(
-                      child: Icon(Icons.person),
-                    ),
-                    title: Text(username, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text(
-                      "${createdAt.toLocal()}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                final userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                final username = userData['username'] ?? "Ismeretlen";
+
+                return Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const CircleAvatar(
+                              radius: 20, // Profilkép (ha van)
+                              child: Icon(Icons.person),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              username,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        if (imageUrl != null)
+                          AspectRatio(
+                            aspectRatio: 3 / 4,
+                            child: Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (context, child, progress) {
+                                if (progress == null) return child;
+                                return const Center(child: CircularProgressIndicator());
+                              },
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Center(child: Text('Hiba a kép betöltésekor')),
+                            ),
+                          ),
+                        const SizedBox(height: 8),
+                        Text(postText),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.favorite_border),
+                              onPressed: () {
+                                // Like gomb logikája
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.comment),
+                              onPressed: () {
+                                // Komment gomb logikája
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  if (imageUrl != null)
-                    Image.network(
-                      imageUrl,
-                      width: double.infinity,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(postText, style: const TextStyle(fontSize: 16)),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () {
-                          // TODO: Like funkció hozzáadása
-                        },
-                        icon: const Icon(Icons.thumb_up_alt_outlined),
-                        label: const Text("Like"),
-                      ),
-                      TextButton.icon(
-                        onPressed: () {
-                          // TODO: Komment funkció hozzáadása
-                        },
-                        icon: const Icon(Icons.comment_outlined),
-                        label: const Text("Komment"),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                );
+              },
             );
           },
         );
