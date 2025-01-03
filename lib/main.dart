@@ -2,6 +2,7 @@ import 'package:beermate_2/firebase_options.dart';
 import 'package:beermate_2/screens/starter_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,12 @@ Future<void> initializeFirebase() async {
   name: 'beermate2',
   options: DefaultFirebaseOptions.currentPlatform,
   );
+
+    // App Check aktiválása debug módban
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.debug, // Debug mód
+  );
+
 }
 
 class MyApp extends StatelessWidget {
