@@ -21,14 +21,14 @@ class _AddNewPostScreenState extends State<AddNewPostScreen> {
   final ImagePicker _picker = ImagePicker();
   String? _imagePath;
   bool _isLoading = false;
+  bool _isPublic = true; // Alapértelmezett: publikus
 
   Future<void> _openSystemCamera() async {
     try {
-      // A gyári kamera megnyitása és kép készítése
       final XFile? image = await _picker.pickImage(
         source: ImageSource.camera,
-        maxWidth: 1024, // Beállított max szélesség
-        maxHeight: 768, // Beállított max magasság (4:3 képarány)
+        maxWidth: 1024,
+        maxHeight: 768,
       );
 
       if (image != null) {
@@ -158,53 +158,85 @@ class _AddNewPostScreenState extends State<AddNewPostScreen> {
   }
 }
 
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          if (_imagePath != null)
-            Expanded(
-              child: Image.file(
-                File(_imagePath!),
-                fit: BoxFit.contain, // Teljes kép megjelenítése
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(),
+    body: SingleChildScrollView( // Görgethetőség biztosítása
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTap: _openSystemCamera,
+              child: AspectRatio(
+                aspectRatio: 4 / 3, // 4:3 képarány
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: _imagePath != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image.file(
+                              File(_imagePath!),
+                            ),
+                          ),
+                        )
+                      : const Center(
+                          child: Icon(
+                            Icons.camera_alt,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
+                        ),
+                ),
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+            const SizedBox(height: 16),
+            TextField(
+              controller: _postContentController,
+              decoration: const InputDecoration(
+                labelText: "Poszt tartalma",
+              ),
+              maxLines: null, // Több soros szöveg támogatása
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextField(
-                  controller: _postContentController,
-                  decoration: const InputDecoration(
-                    labelText: "Poszt tartalma",
-                  ),
+                const Text("Publikus"),
+                Switch(
+                  value: _isPublic,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _isPublic = value;
+                    });
+                  },
                 ),
-                const SizedBox(height: 16),
-                if (_isLoading)
-                  const CircularProgressIndicator(),
-                if (!_isLoading)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: _openSystemCamera,
-                        child: const Text("Kép hozzáadása"),
-                      ),
-                      ElevatedButton(
-                        onPressed: _addPost,
-                        child: const Text("Poszt hozzáadása"),
-                      ),
-                    ],
-                  ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _isLoading ? null : _addPost,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+              ),
+              child: _isLoading
+                  ? const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                  : const Text("Poszt hozzáadása"),
+            ),
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

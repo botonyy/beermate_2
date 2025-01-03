@@ -6,6 +6,7 @@ import 'package:beermate_2/screens/friend_mgmt_screen.dart';
 import 'package:beermate_2/screens/profile_screen.dart';
 import 'package:beermate_2/screens/rating_screen.dart';
 import 'package:beermate_2/services/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -120,6 +121,8 @@ class HomePageContent extends StatelessWidget {
         }
 
         final postsList = snapshot.data!.docs;
+        final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
         return ListView.builder(
           itemCount: postsList.length,
           itemBuilder: (context, index) {
@@ -130,11 +133,13 @@ class HomePageContent extends StatelessWidget {
             final imageUrl = data['image_url'] ?? null;
 
             return FutureBuilder<DocumentSnapshot>(
-              future: firestoreService.getUser(userId), // Felhasználói adat lekérése
+              future: firestoreService.getUser(userId),
               builder: (context, userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (userSnapshot.hasError || !userSnapshot.hasData || !userSnapshot.data!.exists) {
+                } else if (userSnapshot.hasError ||
+                    !userSnapshot.hasData ||
+                    !userSnapshot.data!.exists) {
                   return const ListTile(
                     title: Text("Ismeretlen felhasználó"),
                     subtitle: Text("Hiba történt a felhasználónév betöltésekor."),
@@ -152,16 +157,28 @@ class HomePageContent extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const CircleAvatar(
-                              radius: 20, // Profilkép (ha van)
-                              child: Icon(Icons.person),
+                            Row(
+                              children: [
+                                const CircleAvatar(
+                                  radius: 20,
+                                  child: Icon(Icons.person),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  username,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 8),
-                            Text(
-                              username,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                            if (currentUserId == userId)
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _showDeleteDialog(context, document.id);
+                                },
+                              ),
                           ],
                         ),
                         const SizedBox(height: 8),
@@ -206,6 +223,32 @@ class HomePageContent extends StatelessWidget {
           },
         );
       },
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, String postId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Poszt törlése"),
+        content: const Text("Biztosan törölni szeretnéd ezt a posztot?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Mégse"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              firestoreService.deletePost(postId);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Poszt törölve.")),
+              );
+            },
+            child: const Text("Törlés"),
+          ),
+        ],
+      ),
     );
   }
 }

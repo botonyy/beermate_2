@@ -1,3 +1,4 @@
+import 'package:beermate_2/screens/starter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,6 +82,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => StarterPage()),
+      ); // Navigálás a bejelentkezési oldalra
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Hiba a kijelentkezés során: ${e.toString()}')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isGoogleUser = user?.providerData.any((info) => info.providerId == 'google.com') ?? false;
@@ -119,6 +134,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ElevatedButton(
             onPressed: _updateUserData,
             child: const Text('Mentés'),
+          ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: _signOut,
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red, // Piros szín
+            ),
+            child: const Text('Kijelentkezés'),
           ),
         ],
       ),
